@@ -11,7 +11,7 @@ ENV PROJECT_NAME="myblog"
 ENV DB_NAME="django"
 RUN set -x && \
     echo "nameserver 8.8.8.8" > /etc/resolv.conf && \
-    yum -y install git zlib-devel bzip2 bzip2-devel readline-devel openssl-devel sqlite3 sqlite-devel gcc make && \
+    yum -y install git zlib-devel bzip2 bzip2-devel readline-devel openssl-devel sqlite3 sqlite-devel gcc make postgresql-devel && \
     cd /usr/local/src && \
     curl -O https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz && \
     tar xvzf Python-${PYTHON_VERSION}.tgz && \
@@ -44,8 +44,13 @@ RUN set -x && \
     pip install mecab-python3 && \
     pip install gensim && \
     pip install django-extensions && \
+    pip install gunicorn django-heroku && \
     pip install jupyterlab
     # django-admin startproject ${PROJECT_NAME}
+
+# 追加ソフトのインストール
+RUN set -x && \
+    curl https://cli-assets.heroku.com/install.sh | sh
 
 # Djangoプロジェクトの作成
 COPY ./my_setting.py /root/
